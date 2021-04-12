@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="textSizeProgramm">20dp</dimen>
+     <dimen name="textSizeDescription">15dp</dimen>
+    <dimen name="textSizeDescription2">16dp</dimen>
+    <dimen name="tLCS">30dp</dimen>
+    <dimen name="listAlgoTitle">24dp</dimen>
+    <dimen name="textSizeProgramm1">10dp</dimen>
+    <dimen name="textSizeProgramm2">15dp</dimen>
+</resources>
