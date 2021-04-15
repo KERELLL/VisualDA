@@ -62,9 +62,9 @@
 	<SeekBar
 		android:layout_width="270dp"
 		android:layout_gravity="center"
-        
+		android:thumb="@drawable/custom_seekbar_thumb"
 		android:layout_height="wrap_content"
- 
+		android:progressDrawable="@drawable/track"
 		android:min="50"
 		android:max="1000"
         android:progress="500"
