@@ -79,11 +79,15 @@ namespace VisualDA
             for (int i = 0; i < N + 1; i++)
             {
                 TableRow row = (TableRow)tableLayout.GetChildAt(i + 1);
+                TableRow rowW = (TableRow)tableLayoutW.GetChildAt(0);
+                TableRow rowC = (TableRow)tableLayoutC.GetChildAt(0);
                 for (int j = 0; j < W + 1; j++)
                 {
                     code1.SetTextColor(Android.Graphics.Color.Black);
                     code2.SetTextColor(Android.Graphics.Color.Black);
                     ResetTableColor(tableLayout);
+                    ResetTableColorW(tableLayoutW);
+                    ResetTableColorC(tableLayoutC);
                     double valueOfSeekBar = seekBar.Progress;
                     if (i == 0 || j == 0)
                     {
@@ -100,6 +104,10 @@ namespace VisualDA
                         TextView cell2 = (TextView)row2.GetChildAt(j+1);
                         TableRow row3 = (TableRow)tableLayout.GetChildAt(i);
                         TextView cell3 = (TextView)row3.GetChildAt(j - weights[i-1] + 1);
+                        TextView cellW = (TextView)rowW.GetChildAt(i-1);
+                        TextView cellC = (TextView)rowC.GetChildAt(i - 1);
+                        cellW.SetBackgroundResource(Resource.Drawable.cubBlue);
+                        cellC.SetBackgroundResource(Resource.Drawable.cubBlue);
                         D[i, j] = Math.Max(D[i - 1, j], D[i - 1, j - weights[i-1]] + costs[i-1]);
                         code1.SetTextColor(Android.Graphics.Color.Red);
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
@@ -231,7 +239,24 @@ namespace VisualDA
                 }
             }
         }
-
+        private void ResetTableColorW(TableLayout tableLayout)
+        {
+            TableRow row = (TableRow)tableLayout.GetChildAt(0);
+            for (int i = 0; i < weights.Length; i++)
+            {
+                TextView cell = (TextView)row.GetChildAt(i);
+                cell.SetBackgroundResource(Resource.Drawable.cubGrey2);
+            }
+        }
+        private void ResetTableColorC(TableLayout tableLayout)
+        {
+            TableRow row = (TableRow)tableLayout.GetChildAt(0);
+            for (int i = 0; i < costs.Length; i++)
+            {
+                TextView cell = (TextView)row.GetChildAt(i);
+                cell.SetBackgroundResource(Resource.Drawable.cubGrey2);
+            }
+        }
         private async Task Pause()
         {
             while (pause)

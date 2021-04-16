@@ -8,18 +8,18 @@
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-		android:text="Начать"
-		android:background="@drawable/button_bg_rounded_corners"
-		android:layout_width="270dp"
-		android:textAllCaps="false"
-		android:textColor="#fff"
-		android:textSize="@dimen/textSizeProgramm"
-		android:layout_height="60dp"
-		android:layout_gravity="center"
-		android:id="@+id/buttonStart"
-		android:layout_marginTop="10.9dp"
-		android:layout_marginBottom="16.6dp" />
+		<Button
+			android:text="Начать"
+			android:background="@drawable/button_bg_rounded_corners"
+			android:layout_width="270dp"
+			android:textAllCaps="false"
+			android:textColor="#fff"
+			android:textSize="@dimen/textSizeProgramm"
+			android:layout_height="60dp"
+			android:layout_gravity="center"
+			android:id="@+id/buttonStart"
+			android:layout_marginTop="20.4dp"
+			android:layout_marginBottom="16.6dp" />
 
     <LinearLayout
 		android:orientation="horizontal"
@@ -78,20 +78,22 @@
 		android:layout_marginTop="8.0dp"
 		android:thumb="@drawable/custom_seekbar_thumb"
 		android:progressDrawable="@drawable/track"/>
-	<TextView
-		android:text="0.500 секунда"
-		android:textColor="#000000"
-		android:textSize="@dimen/textSizeProgramm"
-		android:gravity="center"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/speedOfAlgo"/>
-	<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-		android:textSize="16dp"
-        android:textColor="#000000"
-		android:text=" для i от 1 до N \n \tдля j от 1 до W"/>
+		<TextView
+			android:text="0.500 секунда"
+			android:textColor="#000000"
+			android:textSize="@dimen/textSizeProgramm"
+			android:gravity="center"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/speedOfAlgo"
+			android:layout_marginTop="6.0dp" />
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="16dp"
+			android:textColor="#000000"
+			android:text=" для i от 1 до N \n \tдля j от 1 до W"
+			android:layout_marginTop="4.5dp" />
 
 	<TextView
         android:layout_width="match_parent"
