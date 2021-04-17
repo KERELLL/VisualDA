@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -136,6 +137,11 @@ namespace VisualDA
                     }
                 }
             }
+            code1.SetTextColor(Android.Graphics.Color.Black);
+            code2.SetTextColor(Android.Graphics.Color.Black);
+            ResetTableColor(tableLayout);
+            ResetTableColorW(tableLayoutW);
+            ResetTableColorC(tableLayoutC);
         }
         private TableLayout CreateTable()
         {

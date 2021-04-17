@@ -8,7 +8,6 @@ using System.Timers;
 using Android.Widget;
 using Android.Views;
 using System.Threading.Tasks;
-using AndroidX.AppCompat.App;
 
 namespace VisualDA
 {
@@ -26,6 +25,9 @@ namespace VisualDA
         int counter;
         TextView action;
         TextView count;
+        TextView textViewLCS;
+        TextView textViewLCSE;
+        TextView textViewLCSNE;
         TableLayout tableLayout;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -43,6 +45,9 @@ namespace VisualDA
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             action = FindViewById<TextView>(Resource.Id.action);
             count = FindViewById<TextView>(Resource.Id.count);
+            textViewLCS = FindViewById<TextView>(Resource.Id.textViewLCS);
+            textViewLCSE = FindViewById<TextView>(Resource.Id.textViewLCSE);
+            textViewLCSNE = FindViewById<TextView>(Resource.Id.textViewLCSNE);
             counter = 0;
 
             
@@ -109,13 +114,16 @@ namespace VisualDA
                 TableRow row = (TableRow)tableLayout.GetChildAt(i + 1);
                 for (int j = 0; j < lineLen + 1; j++)
                 {
+                    textViewLCS.SetTextColor(Android.Graphics.Color.Black);
+                    textViewLCSE.SetTextColor(Android.Graphics.Color.Black);
+                    textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
                     ResetTableColor(tableLayout);
                     double valueOfSeekBar = seekBar.Progress;
                     if (i == 0 || j == 0)
                     {
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         subsequence[i][j] = 0;
-
+                        textViewLCS.SetTextColor(Android.Graphics.Color.Red);
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
                         counter++;
                         await Pause();
@@ -129,7 +137,7 @@ namespace VisualDA
                         TextView cell2 = (TextView)row2.GetChildAt(j);
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         subsequence[i][j] = subsequence[i - 1][j - 1] + 1;
-
+                        textViewLCSE.SetTextColor(Android.Graphics.Color.Red);
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
                         counter++;
 
@@ -149,7 +157,7 @@ namespace VisualDA
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         TextView cell1 = (TextView)row2.GetChildAt(j + 1);
                         TextView cell2 = (TextView)row.GetChildAt(j);
-
+                        textViewLCSNE.SetTextColor(Android.Graphics.Color.Red);
                         subsequence[i][j] = Math.Max(subsequence[i - 1][j], subsequence[i][j - 1]);
                         action.Text = $"Берем максимум - {subsequence[i][j]}";
 
@@ -181,6 +189,10 @@ namespace VisualDA
                     }
                 }
             }
+            ResetTableColor(tableLayout);
+            textViewLCS.SetTextColor(Android.Graphics.Color.Black);
+            textViewLCSE.SetTextColor(Android.Graphics.Color.Black);
+            textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
             OutputSubsequence(line.Text, column.Text, subsequence, tableLayout);
         }
 

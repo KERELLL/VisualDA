@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
 	xmlns:p4="http://xamarin.com/mono/android/designer"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
@@ -95,4 +98,35 @@
 		android:id="@+id/action"
 		android:layout_marginBottom="0.0dp"
 		android:layout_marginTop="0.0dp" />
+	<TextView
+		android:text="Если i = 0 или j = 0, то L[i, j] = 0"
+		android:textColor="#000000"
+		android:id="@+id/textViewLCS"
+		android:gravity="center"
+			android:textSize="16dp"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="0.0dp"
+		android:layout_marginTop="0.0dp" />
+	<TextView
+		android:text="Если Xi = Yj и i > 0, j > 0, то L[i, j] = L[i - 1, j - 1] + 1"
+		android:textColor="#000000"
+			android:textSize="16dp"
+		android:id="@+id/textViewLCSE"
+		android:gravity="center"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="0.0dp"
+		android:layout_marginTop="0.0dp" />
+	<TextView
+		android:text="Если Xi != Yj и i > 0, j > 0, то L[i, j] = max(L[i - 1, j], L[i, j - 1])"
+		android:textColor="#000000"
+		android:textSize="16dp"
+		android:id="@+id/textViewLCSNE"
+		android:gravity="center"
+		android:layout_width="359dp"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="0.0dp"
+		android:layout_marginTop="0.0dp" />
 </LinearLayout>
+</ScrollView>

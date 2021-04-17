@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
 		android:textSize="16dp"
         android:textColor="#000000"
+		android:id="@+id/textViewWeight"
         android:gravity="center"
 		android:text="ВЕС"/>
 	<LinearLayout
@@ -53,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 		android:textSize="16dp"
+		android:id="@+id/textViewCost"
         android:textColor="#000000"
         android:gravity="center"
 		android:text="ЦЕНА"/>
@@ -90,7 +92,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textSize="16dp"
+			android:textSize="18dp"
 			android:textColor="#000000"
 			android:text=" для i от 1 до N \n \tдля j от 1 до W"
 			android:layout_marginTop="4.5dp" />
@@ -98,14 +100,14 @@
 	<TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:textSize="16dp"
+		android:textSize="17dp"
         android:textColor="#000000"
 		android:id="@+id/textViewCode1"
 		android:text=" \t\t\tесли j > ВЕСА[i] то \n\t\t\t\t\t A[i,j] = max(A[i-1,j],A[i-1,j-ВЕСА[i]]+ЦЕНЫ[i])"/>
 	<TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:textSize="16dp"
+		android:textSize="18dp"
         android:textColor="#000000"
 		android:id="@+id/textViewCode2"
 		android:text=" \t\t\t иначе A[i,j] = A[i-1,j]"/>
