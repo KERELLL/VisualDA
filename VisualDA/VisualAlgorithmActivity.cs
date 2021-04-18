@@ -15,6 +15,8 @@ namespace VisualDA
     public class VisualAlgorithmActivity : Activity
     {
         Button buttonStart;
+        Button buttonPrevStep;
+        Button buttonNextStep;
         TextView line;
         TextView lcs;
         TextView column;
@@ -22,13 +24,14 @@ namespace VisualDA
         TextView speedOfAlgo;
         bool pause = true;
         bool stop = false;
-        int counter;
+        int step;
         TextView action;
         TextView count;
         TextView textViewLCS;
         TextView textViewLCSE;
         TextView textViewLCSNE;
         TableLayout tableLayout;
+        LinearLayout linearLayout;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -41,6 +44,8 @@ namespace VisualDA
             column = FindViewById<TextView>(Resource.Id.column);
             lcs = FindViewById<TextView>(Resource.Id.lcs);
             buttonStart = FindViewById<Button>(Resource.Id.buttonStart);
+            buttonPrevStep = FindViewById<Button>(Resource.Id.buttonPrevStep);
+            buttonNextStep = FindViewById<Button>(Resource.Id.buttonNextStep);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             action = FindViewById<TextView>(Resource.Id.action);
@@ -48,7 +53,8 @@ namespace VisualDA
             textViewLCS = FindViewById<TextView>(Resource.Id.textViewLCS);
             textViewLCSE = FindViewById<TextView>(Resource.Id.textViewLCSE);
             textViewLCSNE = FindViewById<TextView>(Resource.Id.textViewLCSNE);
-            counter = 0;
+            linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
+            step = 0;
 
             
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
@@ -60,11 +66,13 @@ namespace VisualDA
 
             line.Text = Intent.GetStringExtra("line");
             column.Text = Intent.GetStringExtra("column");
-            
 
-            
+
+
             tableLayout = CreateTable();
             int counter2 = 0;
+
+            CancellationTokenSource prevTokenSource = new CancellationTokenSource();
 
             buttonStart.Click += delegate {
                 counter2++;
@@ -80,8 +88,30 @@ namespace VisualDA
                 }
                 if (counter2 < 2)
                 {
-                    DoAlgortihm(tableLayout);
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource = cts;
+                    DoAlgortihm(tableLayout, cts.Token);
                 }
+            };
+
+            buttonPrevStep.Click += delegate {
+                CancellationTokenSource cts = new CancellationTokenSource();
+                prevTokenSource.Cancel();
+                linearLayout.RemoveAllViews();
+                int currentStep = step;
+                step = 0;
+                DoAlgortihm(CreateTable(), cts.Token, currentStep - 1);
+                prevTokenSource = cts;
+            };
+
+            buttonNextStep.Click += delegate {
+                CancellationTokenSource cts = new CancellationTokenSource();
+                prevTokenSource.Cancel();
+                linearLayout.RemoveAllViews();
+                int currentStep = step;
+                step = 0;
+                DoAlgortihm(CreateTable(), cts.Token, currentStep + 1);
+                prevTokenSource = cts;
             };
         }
 
@@ -95,7 +125,7 @@ namespace VisualDA
         /// Подсвечивание чисел, заполнение таблицы
         /// </summary>
         /// <param name="tableLayout">передаем пустую таблицу</param>
-        private async void DoAlgortihm(TableLayout tableLayout)
+        private async void DoAlgortihm(TableLayout tableLayout, CancellationToken token, int stepToGo = 0) 
         {
             string lineText = line.Text;
             string columnText = column.Text;
@@ -125,10 +155,18 @@ namespace VisualDA
                         subsequence[i][j] = 0;
                         textViewLCS.SetTextColor(Android.Graphics.Color.Red);
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        counter++;
-                        await Pause();
-                        count.Text = counter.ToString();
+                        step++;
+                        count.Text = step.ToString();
                         cell.Text = subsequence[i][j].ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                         action.Text = "Записываем 0, так как индекс строки или столбца - нулевой";
                     }
                     else if (column.Text[i - 1] == line.Text[j - 1])
@@ -139,17 +177,31 @@ namespace VisualDA
                         subsequence[i][j] = subsequence[i - 1][j - 1] + 1;
                         textViewLCSE.SetTextColor(Android.Graphics.Color.Red);
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
-                        counter++;
-
-                        await Pause();
-                        count.Text = counter.ToString();
-                        await Task.Delay((int)valueOfSeekBar);
+                        step++;
+                        count.Text = step.ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        counter++;
-                        await Pause();
-                        count.Text = counter.ToString();
+                        step++;
+                        count.Text = step.ToString();
                         cell.Text = subsequence[i][j].ToString();
                         action.Text = $"Совпадение символа {column.Text[i - 1]}, прибовляем еденицу";
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                     }
                     else
                     {
@@ -162,27 +214,45 @@ namespace VisualDA
                         action.Text = $"Берем максимум - {subsequence[i][j]}";
 
                         cell1.SetBackgroundResource(Resource.Drawable.cubRed);
-                        counter++;
-                        await Pause();
-                        count.Text = counter.ToString();
-                        await Task.Delay((int)valueOfSeekBar);
-
+                        step++;
+                        count.Text = step.ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
-                        counter++;
-                        await Pause();
-                        count.Text = counter.ToString();
-                        await Task.Delay((int)valueOfSeekBar);
+                        step++;
+                        count.Text = step.ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
 
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        counter++;
-                        await Pause();
-                        count.Text = counter.ToString();
-                        await Task.Delay((int)valueOfSeekBar);
-
+                        step++;
                         cell.Text = subsequence[i][j].ToString();
+                        count.Text = step.ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+
                     }
-                    await Task.Delay((int)valueOfSeekBar);
-                    await Pause();
                     if (stop)
                     {
                         return;
@@ -230,7 +300,6 @@ namespace VisualDA
         {
             TableLayout tableLayout = new TableLayout(this);
 
-            LinearLayout linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
 
 
             string lineText = line.Text;
@@ -351,11 +420,11 @@ namespace VisualDA
                     finalSubsequence = columnText[i - 1] + finalSubsequence;
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
-                    counter++;
+                    step++;
                     await Pause();
                     await Task.Delay((int)valueOfSeekBar);
 
-                    count.Text = counter.ToString();
+                    count.Text = step.ToString();
                     action.Text = $"Совпадение символа {column.Text[i - 1]}, поэтому идем по диагонале";
                     i--;
                     j--;
@@ -370,21 +439,21 @@ namespace VisualDA
                     action.Text = $"Ячейка верхня больше ячейки нижней, идем вверх";
 
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
-                    counter++;
+                    step++;
                     await Pause();
-                    count.Text = counter.ToString();
+                    count.Text = step.ToString();
                     await Task.Delay((int)valueOfSeekBar);
 
                     cell2.SetBackgroundResource(Resource.Drawable.cubBlue);
-                    counter++;
+                    step++;
                     await Pause();
-                    count.Text = counter.ToString();
+                    count.Text = step.ToString();
                     await Task.Delay((int)valueOfSeekBar);
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
-                    counter++;
+                    step++;
                     await Pause();
-                    count.Text = counter.ToString();
+                    count.Text = step.ToString();
                     await Task.Delay((int)valueOfSeekBar);
 
                     i--;
@@ -399,17 +468,17 @@ namespace VisualDA
                     action.Text = $"Ячейка нижняя больше ячейки верхней, идем влево";
 
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
-                    counter++;
+                    step++;
                     await Pause();
                     await Task.Delay((int)valueOfSeekBar);
 
                     cell2.SetBackgroundResource(Resource.Drawable.cubBlue);
-                    counter++;
+                    step++;
                     await Pause();
                     await Task.Delay((int)valueOfSeekBar);
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
-                    counter++;
+                    step++;
                     await Pause();
                     await Task.Delay((int)valueOfSeekBar);
 

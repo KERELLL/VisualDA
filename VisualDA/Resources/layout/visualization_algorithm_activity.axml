@@ -51,6 +51,29 @@
 		android:id="@+id/buttonStart"
 		android:layout_marginTop="10.9dp"
 		android:layout_marginBottom="16.6dp" />
+		<Button
+		android:text="Назад"
+		android:background="@drawable/button_bg_rounded_corners"
+		android:layout_width="270dp"
+		android:textAllCaps="false"
+		android:textColor="#fff"
+		android:textSize="@dimen/textSizeProgramm"
+		android:layout_height="60dp"
+		android:layout_gravity="center"
+		android:id="@+id/buttonPrevStep"
+		android:layout_marginBottom="16.6dp" />
+
+		<Button
+		android:text="Вперед"
+		android:background="@drawable/button_bg_rounded_corners"
+		android:layout_width="270dp"
+		android:textAllCaps="false"
+		android:textColor="#fff"
+		android:textSize="@dimen/textSizeProgramm"
+		android:layout_height="60dp"
+		android:layout_gravity="center"
+		android:id="@+id/buttonNextStep"
+		android:layout_marginBottom="16.6dp" />
 
 
 	<LinearLayout
@@ -103,7 +126,7 @@
 		android:textColor="#000000"
 		android:id="@+id/textViewLCS"
 		android:gravity="center"
-			android:textSize="16dp"
+		android:textSize="16dp"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_marginBottom="0.0dp"
@@ -111,7 +134,7 @@
 	<TextView
 		android:text="Если Xi = Yj и i > 0, j > 0, то L[i, j] = L[i - 1, j - 1] + 1"
 		android:textColor="#000000"
-			android:textSize="16dp"
+		android:textSize="16dp"
 		android:id="@+id/textViewLCSE"
 		android:gravity="center"
 		android:layout_width="match_parent"
