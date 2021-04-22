@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
@@ -18,13 +19,17 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class KnapsackProblemActivity : Activity
     {
-        Button buttonStart;
+        ImageButton buttonStart;
+        ImageButton buttonPrevStep;
+        ImageButton buttonNextStep;
+        LinearLayout linearLayout;
         SeekBar seekBar;
         TextView speedOfAlgo;
         TextView code1;
         TextView code2;
         bool pause = true;
         bool stop = false;
+        int step;
         TableLayout tableLayout;
         TableLayout tableLayoutW;
         TableLayout tableLayoutC;
@@ -40,31 +45,64 @@ namespace VisualDA
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.knapsack_problem_activity);
-            buttonStart = FindViewById<Button>(Resource.Id.buttonStart);
+            buttonStart = FindViewById<ImageButton>(Resource.Id.buttonStart);
+            buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
+            buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             code1 = FindViewById<TextView>(Resource.Id.textViewCode1);
             code2 = FindViewById<TextView>(Resource.Id.textViewCode2);
+            linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             int counter2 = 0;
+            step = 0;
             tableLayout = CreateTable();
             tableLayoutW = CreateTableWeights();
             tableLayoutC = CreateTableCosts();
+
+            CancellationTokenSource prevTokenSource = new CancellationTokenSource();
             buttonStart.Click += delegate {
                 counter2++;
                 if (pause == true)
                 {
-                    buttonStart.Text = "Стоп";
+                    buttonStart.SetBackgroundResource(Resource.Drawable.pause);
                     pause = false;
                 }
                 else
                 {
-                    buttonStart.Text = "Продолжить";
+                    buttonStart.SetBackgroundResource(Resource.Drawable.play);
                     pause = true;
                 }
                 if (counter2 < 2)
                 {
-                    DoAlgorithm(tableLayout);
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource = cts;
+                    DoAlgorithm(tableLayout, cts.Token);
+                }
+            };
+            buttonPrevStep.Click += delegate {
+                if (pause)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgorithm(CreateTable(), cts.Token, currentStep - 1);
+                    prevTokenSource = cts;
+                }
+            };
+
+            buttonNextStep.Click += delegate {
+                if (pause)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgorithm(CreateTable(), cts.Token, currentStep + 1);
+                    prevTokenSource = cts;
                 }
             };
         }
@@ -74,7 +112,7 @@ namespace VisualDA
             speedOfAlgo.Text = ((e.Progress / 1000.0)).ToString() + " секунда";
         }
 
-        private async void DoAlgorithm(TableLayout tableLayout)
+        private async void DoAlgorithm(TableLayout tableLayout, CancellationToken token, int stepToGo = 0)
         {
             int[,] D = new int[N + 1, W + 1];
             for (int i = 0; i < N + 1; i++)
@@ -94,9 +132,18 @@ namespace VisualDA
                     {
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         D[i, 0] = 0;
+                        step++;
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        await Pause();
                         cell.Text = D[i, j].ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                     }
                     else if (j - weights[i-1] >= 0)
                     {
@@ -109,28 +156,51 @@ namespace VisualDA
                         TextView cellC = (TextView)rowC.GetChildAt(i - 1);
                         cellW.SetBackgroundResource(Resource.Drawable.cubBlue);
                         cellC.SetBackgroundResource(Resource.Drawable.cubBlue);
+                        step++;
                         D[i, j] = Math.Max(D[i - 1, j], D[i - 1, j - weights[i-1]] + costs[i-1]);
                         code1.SetTextColor(Android.Graphics.Color.Red);
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
                         cell3.SetBackgroundResource(Resource.Drawable.cubRed);
-                        await Pause();
-                        await Task.Delay((int)valueOfSeekBar);
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        await Pause();
-                        await Task.Delay((int)valueOfSeekBar);
                         cell.Text = D[i, j].ToString();
+                        step++;
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                     }
                     else
                     {
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
-                        await Pause();
+                        step++;
                         code2.SetTextColor(Android.Graphics.Color.Red);
                         D[i, j] = D[i - 1, j];
                         cell.Text = D[i, j].ToString();
+                        if (step >= stepToGo)
+                        {
+                            await Pause();
+                            await Task.Delay((int)valueOfSeekBar);
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
                     }
-                    await Task.Delay((int)valueOfSeekBar);
-                    await Pause();
                     if (stop)
                     {
                         return;
@@ -147,7 +217,6 @@ namespace VisualDA
         {
             TableLayout tableLayout = new TableLayout(this);
 
-            LinearLayout linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
 
             TableRow row = new TableRow(this);
             for (int j = 0; j < W + 2; j++)

@@ -14,9 +14,9 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class VisualAlgorithmActivity : Activity
     {
-        Button buttonStart;
-        Button buttonPrevStep;
-        Button buttonNextStep;
+        ImageButton buttonStart;
+        ImageButton buttonPrevStep;
+        ImageButton buttonNextStep;
         TextView line;
         TextView lcs;
         TextView column;
@@ -43,9 +43,9 @@ namespace VisualDA
             line = FindViewById<TextView>(Resource.Id.line);
             column = FindViewById<TextView>(Resource.Id.column);
             lcs = FindViewById<TextView>(Resource.Id.lcs);
-            buttonStart = FindViewById<Button>(Resource.Id.buttonStart);
-            buttonPrevStep = FindViewById<Button>(Resource.Id.buttonPrevStep);
-            buttonNextStep = FindViewById<Button>(Resource.Id.buttonNextStep);
+            buttonStart = FindViewById<ImageButton>(Resource.Id.buttonStart);
+            buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
+            buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             action = FindViewById<TextView>(Resource.Id.action);
@@ -78,12 +78,12 @@ namespace VisualDA
                 counter2++;
                 if(pause == true)
                 {
-                    buttonStart.Text = "Стоп";
+                    buttonStart.SetBackgroundResource(Resource.Drawable.pause);
                     pause = false;
                 }
                 else
                 {
-                    buttonStart.Text = "Продолжить";
+                    buttonStart.SetBackgroundResource(Resource.Drawable.play);
                     pause = true;
                 }
                 if (counter2 < 2)
@@ -95,23 +95,29 @@ namespace VisualDA
             };
 
             buttonPrevStep.Click += delegate {
-                CancellationTokenSource cts = new CancellationTokenSource();
-                prevTokenSource.Cancel();
-                linearLayout.RemoveAllViews();
-                int currentStep = step;
-                step = 0;
-                DoAlgortihm(CreateTable(), cts.Token, currentStep - 1);
-                prevTokenSource = cts;
+                if (pause)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgortihm(CreateTable(), cts.Token, currentStep - 1);
+                    prevTokenSource = cts;
+                }
             };
 
             buttonNextStep.Click += delegate {
-                CancellationTokenSource cts = new CancellationTokenSource();
-                prevTokenSource.Cancel();
-                linearLayout.RemoveAllViews();
-                int currentStep = step;
-                step = 0;
-                DoAlgortihm(CreateTable(), cts.Token, currentStep + 1);
-                prevTokenSource = cts;
+                if (pause)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgortihm(CreateTable(), cts.Token, currentStep + 1);
+                    prevTokenSource = cts;
+                }
             };
         }
 
@@ -192,7 +198,7 @@ namespace VisualDA
                         step++;
                         count.Text = step.ToString();
                         cell.Text = subsequence[i][j].ToString();
-                        action.Text = $"Совпадение символа {column.Text[i - 1]}, прибовляем еденицу";
+                        action.Text = $"Совпадение символа {column.Text[i - 1]}, прибавляем единицу";
                         if (step >= stepToGo)
                         {
                             await Pause();
@@ -263,7 +269,7 @@ namespace VisualDA
             textViewLCS.SetTextColor(Android.Graphics.Color.Black);
             textViewLCSE.SetTextColor(Android.Graphics.Color.Black);
             textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
-            OutputSubsequence(line.Text, column.Text, subsequence, tableLayout);
+            OutputSubsequence(line.Text, column.Text, subsequence, tableLayout,token, stepToGo);
         }
 
         private async Task Pause()
@@ -403,7 +409,7 @@ namespace VisualDA
         /// <param name="columnText">Столбец</param>
         /// <param name="subsequence">Массив чисел из алгоритма</param>
         /// <param name="tableLayout">Заполненная табоица</param>
-        private async void OutputSubsequence(string lineText, string columnText, int[][] subsequence, TableLayout tableLayout)
+        private async void OutputSubsequence(string lineText, string columnText, int[][] subsequence, TableLayout tableLayout, CancellationToken token, int stepToGo = 0)
         {
             string finalSubsequence = "";
             int i = columnText.Length;
@@ -421,11 +427,17 @@ namespace VisualDA
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
-                    await Pause();
-                    await Task.Delay((int)valueOfSeekBar);
-
                     count.Text = step.ToString();
                     action.Text = $"Совпадение символа {column.Text[i - 1]}, поэтому идем по диагонале";
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
                     i--;
                     j--;
                 }
@@ -440,21 +452,42 @@ namespace VisualDA
 
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
-                    await Pause();
                     count.Text = step.ToString();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     cell2.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
-                    await Pause();
                     count.Text = step.ToString();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
-                    await Pause();
                     count.Text = step.ToString();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     i--;
                 }
@@ -469,35 +502,52 @@ namespace VisualDA
 
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
-                    await Pause();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     cell2.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
-                    await Pause();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
-                    await Pause();
-                    await Task.Delay((int)valueOfSeekBar);
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
 
                     j--;
                 }
-                await Pause();
                 if (stop)
                     return;
             }
             TextView lcs = FindViewById<TextView>(Resource.Id.lcs);
             lcs.Text = finalSubsequence + " длина: " + finalSubsequence.Length.ToString();
-
-            buttonStart.Text = "Вернуться назад";
             action.Text = "Алгоритм закончен";
 
             buttonStart.Click+=delegate {
                 Intent intent = new Intent(this, typeof(LCSActivity));
                 StartActivity(intent);
-                buttonStart.Text = "Начать";
             };
         }
     }
