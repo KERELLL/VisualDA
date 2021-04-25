@@ -8,6 +8,7 @@ using System.Timers;
 using Android.Widget;
 using Android.Views;
 using System.Threading.Tasks;
+using Android.Graphics;
 
 namespace VisualDA
 {
@@ -54,6 +55,9 @@ namespace VisualDA
             textViewLCSE = FindViewById<TextView>(Resource.Id.textViewLCSE);
             textViewLCSNE = FindViewById<TextView>(Resource.Id.textViewLCSNE);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
+            Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
+            action.SetTypeface(tf, TypefaceStyle.Normal);
+
             step = 0;
 
             
@@ -148,6 +152,8 @@ namespace VisualDA
             for (int i = 0; i < columnLen + 1; i++)
             {
                 TableRow row = (TableRow)tableLayout.GetChildAt(i + 1);
+                TableRow rowSymbolI = (TableRow)tableLayout.GetChildAt(0);
+                TableRow rowSymbolJ = (TableRow)tableLayout.GetChildAt(i + 1);
                 for (int j = 0; j < lineLen + 1; j++)
                 {
                     textViewLCS.SetTextColor(Android.Graphics.Color.Black);
@@ -155,6 +161,8 @@ namespace VisualDA
                     textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
                     ResetTableColor(tableLayout);
                     double valueOfSeekBar = seekBar.Progress;
+                    TextView cellSymbolJ = (TextView)rowSymbolJ.GetChildAt(0);
+                    TextView cellSymbolI = (TextView)rowSymbolI.GetChildAt(j + 1);
                     if (i == 0 || j == 0)
                     {
                         TextView cell = (TextView)row.GetChildAt(j + 1);
@@ -164,6 +172,7 @@ namespace VisualDA
                         step++;
                         count.Text = step.ToString();
                         cell.Text = subsequence[i][j].ToString();
+                        action.Text = "Индекс строки или столбца - нулевой => 0";
                         if (step >= stepToGo)
                         {
                             await Pause();
@@ -173,10 +182,11 @@ namespace VisualDA
                                 return;
                             }
                         }
-                        action.Text = "Записываем 0, так как индекс строки или столбца - нулевой";
                     }
                     else if (column.Text[i - 1] == line.Text[j - 1])
                     {
+                        cellSymbolJ.SetBackgroundResource(Resource.Drawable.cubBlue);
+                        cellSymbolI.SetBackgroundResource(Resource.Drawable.cubBlue);
                         TableRow row2 = (TableRow)tableLayout.GetChildAt(i);
                         TextView cell2 = (TextView)row2.GetChildAt(j);
                         TextView cell = (TextView)row.GetChildAt(j + 1);
@@ -211,6 +221,8 @@ namespace VisualDA
                     }
                     else
                     {
+                        cellSymbolJ.SetBackgroundResource(Resource.Drawable.cubBlue);
+                        cellSymbolI.SetBackgroundResource(Resource.Drawable.cubBlue);
                         TableRow row2 = (TableRow)tableLayout.GetChildAt(i);
                         TextView cell = (TextView)row.GetChildAt(j + 1);
                         TextView cell1 = (TextView)row2.GetChildAt(j + 1);
@@ -287,12 +299,12 @@ namespace VisualDA
         {
             int lineLen = line.Text.Length;
             int columnLen = column.Text.Length;
-            for(int i = 0; i < columnLen + 1;i++)
+            for(int i = 0; i < columnLen + 2;i++)
             {
-                TableRow row = (TableRow)tableLayout.GetChildAt(i+1);
-                for (int j = 0; j < lineLen + 1;j++)
+                TableRow row = (TableRow)tableLayout.GetChildAt(i);
+                for (int j = 0; j < lineLen + 2;j++)
                 {
-                    TextView cell = (TextView)row.GetChildAt(j + 1);
+                    TextView cell = (TextView)row.GetChildAt(j);
                     cell.SetBackgroundResource(Resource.Drawable.cubGrey2);
                 }
             }
@@ -488,7 +500,7 @@ namespace VisualDA
                             return;
                         }
                     }
-
+                    cell2.SetBackgroundResource(Resource.Drawable.cubGrey2);
                     i--;
                 }
                 else
@@ -535,7 +547,7 @@ namespace VisualDA
                             return;
                         }
                     }
-
+                    cell1.SetBackgroundResource(Resource.Drawable.cubGrey2);
                     j--;
                 }
                 if (stop)

@@ -28,7 +28,14 @@
 			android:clipToPadding="false"
 			android:id="@+id/linearLayout1">
 		</LinearLayout>
-
+		<TextView
+			android:text="Что будет происходить"
+			android:textColor="#000000"
+			android:gravity="center"
+			android:textSize="18dp"
+			android:layout_width="match_parent"
+			android:layout_height="60dp"
+			android:id="@+id/action" />
 		<GridLayout
 		android:layout_width="wrap_content"
 		android:layout_height="58.0dp"
@@ -66,6 +73,7 @@
         android:textColor="#000000"
 		android:id="@+id/textViewWeight"
         android:gravity="center"
+		android:textStyle="bold"
 		android:text="ВЕС"/>
 	<LinearLayout
 		android:orientation="horizontal"
@@ -74,7 +82,6 @@
 		android:gravity="center"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:padding="11dp"
 		android:id="@+id/linearLayout2">
     </LinearLayout>
 	<TextView
@@ -84,6 +91,7 @@
 		android:id="@+id/textViewCost"
         android:textColor="#000000"
         android:gravity="center"
+		android:textStyle="bold"
 		android:text="ЦЕНА"/>
 	<LinearLayout
 		android:orientation="horizontal"
@@ -92,21 +100,20 @@
 		android:gravity="center"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:padding="11dp"
 		android:id="@+id/linearLayout3">
     </LinearLayout>
 
-	<SeekBar
-		android:layout_width="270dp"
-		android:layout_gravity="center"
-		android:layout_height="wrap_content"
-		android:min="50"
-		android:max="1000"
-        android:progress="500"
-		android:id="@+id/seekBar1"
-		android:layout_marginTop="8.0dp"
-		android:thumb="@drawable/custom_seekbar_thumb"
-		android:progressDrawable="@drawable/track"/>
+		<SeekBar
+			android:layout_width="270dp"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:min="50"
+			android:max="1000"
+			android:progress="500"
+			android:id="@+id/seekBar1"
+			android:layout_marginTop="14.5dp"
+			android:thumb="@drawable/custom_seekbar_thumb"
+			android:progressDrawable="@drawable/track"/>
 		<TextView
 			android:text="0.500 секунда"
 			android:textColor="#000000"
@@ -119,24 +126,28 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:gravity="center"
 			android:textSize="18dp"
+			android:id="@+id/textViewCode3"
 			android:textColor="#000000"
-			android:text=" для i от 1 до N \n \tдля j от 1 до W"
+			android:text="Если i = 0 или j = 0, то A[i, j] = 0"
 			android:layout_marginTop="4.5dp" />
 
-	<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-		android:textSize="17dp"
-        android:textColor="#000000"
-		android:id="@+id/textViewCode1"
-		android:text=" \t\t\tесли j > ВЕСА[i] то \n\t\t\t\t\t A[i,j] = max(A[i-1,j],A[i-1,j-ВЕСА[i]]+ЦЕНЫ[i])"/>
-	<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-		android:textSize="18dp"
-        android:textColor="#000000"
-		android:id="@+id/textViewCode2"
-		android:text=" \t\t\t иначе A[i,j] = A[i-1,j]"/>
-</LinearLayout>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textSize="18dp"
+			android:textColor="#000000"
+			android:id="@+id/textViewCode1"
+			android:text="Иначе если j > ВЕСА[i] то A[i,j] = max(A[i-1,j],A[i-1,j-ВЕСА[i]]+ЦЕНЫ[i])"/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textSize="18dp"
+			android:textColor="#000000"
+			android:id="@+id/textViewCode2"
+			android:text=" Иначе A[i,j] = A[i-1,j]"/>
+	</LinearLayout>
 </ScrollView>

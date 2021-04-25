@@ -27,6 +27,8 @@ namespace VisualDA
         TextView speedOfAlgo;
         TextView code1;
         TextView code2;
+        TextView code3;
+        TextView action;
         bool pause = true;
         bool stop = false;
         int step;
@@ -52,8 +54,12 @@ namespace VisualDA
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             code1 = FindViewById<TextView>(Resource.Id.textViewCode1);
             code2 = FindViewById<TextView>(Resource.Id.textViewCode2);
+            code3 = FindViewById<TextView>(Resource.Id.textViewCode3);
+            action = FindViewById<TextView>(Resource.Id.action);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
+            Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
+            action.SetTypeface(tf, TypefaceStyle.Normal);
             int counter2 = 0;
             step = 0;
             tableLayout = CreateTable();
@@ -124,6 +130,7 @@ namespace VisualDA
                 {
                     code1.SetTextColor(Android.Graphics.Color.Black);
                     code2.SetTextColor(Android.Graphics.Color.Black);
+                    code3.SetTextColor(Android.Graphics.Color.Black);
                     ResetTableColor(tableLayout);
                     ResetTableColorW(tableLayoutW);
                     ResetTableColorC(tableLayoutC);
@@ -131,8 +138,10 @@ namespace VisualDA
                     if (i == 0 || j == 0)
                     {
                         TextView cell = (TextView)row.GetChildAt(j + 1);
-                        D[i, 0] = 0;
                         step++;
+                        code3.SetTextColor(Android.Graphics.Color.Red);
+                        D[i, 0] = 0;
+                        action.Text = "A[i, 0] = 0";
                         cell.SetBackgroundResource(Resource.Drawable.cubBlue);
                         cell.Text = D[i, j].ToString();
                         if (step >= stepToGo)
@@ -158,6 +167,7 @@ namespace VisualDA
                         cellC.SetBackgroundResource(Resource.Drawable.cubBlue);
                         step++;
                         D[i, j] = Math.Max(D[i - 1, j], D[i - 1, j - weights[i-1]] + costs[i-1]);
+                        action.Text = $"Max({D[i - 1, j]}, {D[i - 1, j - weights[i - 1]]} + {costs[i - 1]}(ЦЕНА)) = {Math.Max(D[i - 1, j], D[i - 1, j - weights[i - 1]] + costs[i - 1])}";
                         code1.SetTextColor(Android.Graphics.Color.Red);
                         cell2.SetBackgroundResource(Resource.Drawable.cubRed);
                         cell3.SetBackgroundResource(Resource.Drawable.cubRed);
@@ -190,6 +200,7 @@ namespace VisualDA
                         step++;
                         code2.SetTextColor(Android.Graphics.Color.Red);
                         D[i, j] = D[i - 1, j];
+                        action.Text = $"A[i, j] = D[i - 1, j] = {D[i - 1, j]}";
                         cell.Text = D[i, j].ToString();
                         if (step >= stepToGo)
                         {
@@ -212,6 +223,7 @@ namespace VisualDA
             ResetTableColor(tableLayout);
             ResetTableColorW(tableLayoutW);
             ResetTableColorC(tableLayoutC);
+            action.Text = "Алгоритм закончен";
         }
         private TableLayout CreateTable()
         {

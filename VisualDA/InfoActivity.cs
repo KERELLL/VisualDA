@@ -20,7 +20,6 @@ namespace VisualDA
         {
             base.OnCreate(savedInstanceState);
 
-            // Create your application here
         }
     }
 }
