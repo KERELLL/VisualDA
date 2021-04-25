@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -25,6 +26,7 @@ namespace VisualDA
         SeekBar seekBar;
         EditText editTextFb;
         TextView textView;
+        TextView startMenu;
         TextView speedOfAlgo;
         TableLayout tableLayout;
         bool pause = true;
@@ -43,9 +45,12 @@ namespace VisualDA
             buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
             editTextFb = FindViewById<EditText>(Resource.Id.editText1);
             textView = FindViewById<TextView>(Resource.Id.textView2);
+            startMenu = FindViewById<TextView>(Resource.Id.startMenu);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
+            Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
+            startMenu.SetTypeface(tf, TypefaceStyle.Normal);
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             StartVisualizing();
         }
