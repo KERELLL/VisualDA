@@ -19,14 +19,12 @@ namespace VisualDA
     {
         ListView listView;
         List<Algorithm> algorithms;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_algorithms);
             listView = FindViewById<ListView>(Resource.Id.listView);
-
             //Create data
 
             algorithms = new List<Algorithm>();

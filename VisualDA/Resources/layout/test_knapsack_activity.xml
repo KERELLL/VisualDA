@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/textViewScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Очки: 0"
+        android:textColor="#000"/>
+	<TextView
+		android:id="@+id/textViewQuestionCount"
+		android:layout_width="wrap_content"
+		android:layout_height="27.0dp"
+		android:textSize="20dp"
+		android:text="Вопрос: 1/x"
+		android:textColor="#000"/>
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:id="@+id/imageViewTest"
+        />
+    <TextView
+			android:text="Question Image"
+			android:textColor="#000000"
+			android:gravity="center"
+			android:textSize="18dp"
+			android:layout_width="match_parent"
+			android:id="@+id/questionImage"
+			android:layout_height="wrap_content"/>
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_marginTop="10.0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:id="@+id/radioButton1"
+            android:textSize="18dp"
+            android:layout_height="wrap_content"
+            android:text="Option 1">
+        </RadioButton>
+         <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/radioButton2"
+            android:text="Option 2">
+        </RadioButton>
+         <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/radioButton3"
+            android:text="Option 3">
+        </RadioButton>
+    </RadioGroup>
+	<Button
+		android:text="Подтвердить"
+		android:background="@drawable/button_bg_rounded_corners"
+		android:layout_width="270dp"
+		android:textAllCaps="false"
+		android:textColor="#fff"
+		android:textSize="23dp"
+		android:layout_height="60dp"
+		android:layout_gravity="center"
+		android:id="@+id/buttonTest"
+		android:layout_marginTop="10.0dp"
+		android:layout_marginBottom="20.5dp" />
+</LinearLayout>

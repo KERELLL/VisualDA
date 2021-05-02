@@ -19,16 +19,22 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class KnapsackProblemActivity : Activity
     {
+        private static int REQUEST_CODE_TEST = 1;
+        public static string SHARED_PREFS = "sharedPrefs";
+        public static string KEY_HIGHSCORE = "keyHighscore";
         ImageButton buttonStart;
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
+        Button testButton;
         LinearLayout linearLayout;
         SeekBar seekBar;
         TextView speedOfAlgo;
         TextView code1;
         TextView code2;
         TextView code3;
+        TextView textHighscore;
         TextView action;
+        TextView startMenu;
         bool pause = true;
         bool stop = false;
         int step;
@@ -39,7 +45,7 @@ namespace VisualDA
         int W = 7;
         int[] weights = new int[4] {1, 3, 4, 5 };
         int[] costs = new int[4] { 1, 4, 5, 7 };
-
+        int highscore;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -50,16 +56,22 @@ namespace VisualDA
             buttonStart = FindViewById<ImageButton>(Resource.Id.buttonStart);
             buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
             buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
+            testButton = FindViewById<Button>(Resource.Id.buttonTest);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             code1 = FindViewById<TextView>(Resource.Id.textViewCode1);
             code2 = FindViewById<TextView>(Resource.Id.textViewCode2);
             code3 = FindViewById<TextView>(Resource.Id.textViewCode3);
             action = FindViewById<TextView>(Resource.Id.action);
+            startMenu = FindViewById<TextView>(Resource.Id.startMenu);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
+            textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
+            LoadHighscore();
+            
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
             action.SetTypeface(tf, TypefaceStyle.Normal);
+            startMenu.SetTypeface(tf, TypefaceStyle.Normal);
             int counter2 = 0;
             step = 0;
             tableLayout = CreateTable();
@@ -111,6 +123,41 @@ namespace VisualDA
                     prevTokenSource = cts;
                 }
             };
+            testButton.Click += delegate {
+                Intent intent = new Intent(this, typeof(TestKnapsackActivity));
+                StartActivityForResult(intent, REQUEST_CODE_TEST);
+            };
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if(requestCode == REQUEST_CODE_TEST)
+            {
+                if(resultCode == Result.Ok)
+                {
+                    int score = data.GetIntExtra(TestKnapsackActivity.EXTRA_SCORE, 0);
+                    if(score > highscore)
+                    {
+                        UpdateHighscore(score);
+                    }
+                }
+            }
+        }
+
+        private void LoadHighscore()
+        {
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
+            textHighscore.Text = "Highscore: " + highscore;
+        }
+        private void UpdateHighscore(int highscoreNew)
+        {
+            highscore = highscoreNew;
+            textHighscore.Text = "Highscore: " + highscore;
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            ISharedPreferencesEditor editor = prefs.Edit();
+            editor.PutInt(KEY_HIGHSCORE, highscore);
+            editor.Apply();
         }
 
         private void seekBarProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)

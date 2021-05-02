@@ -71,6 +71,10 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="InfoActivity.cs" />
+    <Compile Include="Question.cs" />
+    <Compile Include="TestKnapsackActivity.cs" />
+    <Compile Include="QuizContract.cs" />
+    <Compile Include="TestDBHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -201,6 +205,22 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\start.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\test_knapsack_activity.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\question1pic.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\question2pic.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\question3pic.png">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

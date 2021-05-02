@@ -19,14 +19,13 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class FibonacciSequenceActivity : Activity
     {
-        ImageButton startButton;
+        Button startButton;
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
         LinearLayout linearLayout;
         SeekBar seekBar;
         EditText editTextFb;
         TextView textView;
-        TextView startMenu;
         TextView speedOfAlgo;
         TableLayout tableLayout;
         bool pause = true;
@@ -40,17 +39,14 @@ namespace VisualDA
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.fibonacci_sequence_activity);
-            startButton = FindViewById<ImageButton>(Resource.Id.startButton);
-            buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
-            buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
+            startButton = FindViewById<Button>(Resource.Id.buttonStart);
+            //buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
+            //buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
             editTextFb = FindViewById<EditText>(Resource.Id.editText1);
             textView = FindViewById<TextView>(Resource.Id.textView2);
-            startMenu = FindViewById<TextView>(Resource.Id.startMenu);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
-            Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
-            startMenu.SetTypeface(tf, TypefaceStyle.Normal);
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             StartVisualizing();
         }
@@ -66,10 +62,9 @@ namespace VisualDA
             CancellationTokenSource prevTokenSource = new CancellationTokenSource();
             startButton.Click += delegate
             {
-                counter2++;
                 if (editTextFb.Text == "")
                 {
-                    Toast.MakeText(this, "", ToastLength.Long).Show();
+                    Toast.MakeText(this, "Введите число", ToastLength.Long).Show();
                     editTextFb.Focusable = true;
                     editTextFb.FocusableInTouchMode = true;
                     editTextFb.InputType = Android.Text.InputTypes.ClassText;
@@ -80,57 +75,32 @@ namespace VisualDA
                     num = int.Parse(editTextFb.Text);
                     if (num < 1 || num > 11)
                     {
-                        Toast.MakeText(this, "", ToastLength.Long).Show();
+                        Toast.MakeText(this, "Ваше число не входит в [1, 10]", ToastLength.Long).Show();
                     }
                     else
                     {
+                        counter2++;
                         if (pause == true)
                         {
-                            startButton.SetBackgroundResource(Resource.Drawable.pause);
+                            startButton.Text = "Стоп";
                             pause = false;
                         }
                         else
                         {
-                            startButton.SetBackgroundResource(Resource.Drawable.play);
+                            startButton.Text = "Продолжить";
                             pause = true;
                         }
                         editTextFb.Focusable = false;
                         editTextFb.FocusableInTouchMode = false;
                         editTextFb.InputType = Android.Text.InputTypes.Null;
+                        CancellationTokenSource cts = new CancellationTokenSource();
+                        prevTokenSource = cts;
                         if(counter2 < 2)
                         {
-                            CancellationTokenSource cts = new CancellationTokenSource();
-                            prevTokenSource = cts;
                             tableLayout = CreateTable();
                             DoAlgorithm(tableLayout, cts.Token);
-
                         }
                     }
-                }
-            };
-            buttonPrevStep.Click += delegate {
-                if (pause)
-                {
-                    CancellationTokenSource cts = new CancellationTokenSource();
-                    prevTokenSource.Cancel();
-                    linearLayout.RemoveAllViews();
-                    int currentStep = step;
-                    step = 0;
-                    DoAlgorithm(CreateTable(), cts.Token, currentStep - 1);
-                    prevTokenSource = cts;
-                }
-            };
-
-            buttonNextStep.Click += delegate {
-                if (pause)
-                {
-                    CancellationTokenSource cts = new CancellationTokenSource();
-                    prevTokenSource.Cancel();
-                    linearLayout.RemoveAllViews();
-                    int currentStep = step;
-                    step = 0;
-                    DoAlgorithm(CreateTable(), cts.Token, currentStep + 1);
-                    prevTokenSource = cts;
                 }
             };
         }
@@ -204,6 +174,8 @@ namespace VisualDA
                 cell.Text = sequence[i].ToString();
             }
             ResetTableColor(tableLayout);
+            startButton.Enabled = false;
+            startButton.Text = "Алгоритм закончен";
         }
         private async Task Pause()
         {

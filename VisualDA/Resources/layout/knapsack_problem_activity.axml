@@ -9,16 +9,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<TextView
-		android:textSize="@dimen/textSizeProgramm"
-		android:textColor="#000000"
-		android:gravity="center"
-		android:text="Задача о рюкзаке"
-		android:layout_width="match_parent"
-		android:textStyle="bold"
-		android:layout_height="59.0dp"
-		android:layout_marginRight="0.0dp"
-		android:layout_marginBottom="8.0dp" />
+		<TextView
+			android:textSize="@dimen/textSizeProgramm"
+			android:textColor="#000000"
+			android:gravity="center"
+			android:text="Задача о рюкзаке"
+			android:layout_width="match_parent"
+			android:textStyle="bold"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="0.0dp"
+			android:layout_marginBottom="0.0dp"
+			android:layout_marginTop="33.5dp" />
 		<TextView
 			android:text="Размер рюкзака - 7\nКоличество камней - 4"
 			android:textColor="#000000"
@@ -26,7 +27,7 @@
 			android:textSize="18dp"
 			android:layout_width="match_parent"
 			android:id="@+id/startMenu"
-			android:layout_height="53.5dp"/>
+			android:layout_height="58.5dp"/>
 
 		<LinearLayout
 			android:orientation="horizontal"
@@ -158,5 +159,21 @@
 			android:textColor="#000000"
 			android:id="@+id/textViewCode2"
 			android:text=" Иначе A[i,j] = A[i-1,j]"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:id="@+id/textHighscore"/>
+		<Button
+			android:text="Тест"
+			android:background="@drawable/button_bg_rounded_corners"
+			android:layout_width="270dp"
+			android:textAllCaps="false"
+			android:textColor="#fff"
+			android:textSize="23dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center"
+			android:id="@+id/buttonTest"
+			android:layout_marginTop="10.9dp"
+			android:layout_marginBottom="20.5dp" />
 	</LinearLayout>
 </ScrollView>
