@@ -63,6 +63,7 @@ namespace VisualDA
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             testButton = FindViewById<Button>(Resource.Id.buttonTest);
             textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
+            LoadHighscore();
             Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
             action.SetTypeface(tf, TypefaceStyle.Normal);
 

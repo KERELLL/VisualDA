@@ -19,10 +19,17 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class FibonacciSequenceActivity : Activity
     {
+        private static int REQUEST_CODE_TEST = 1;
+        public static string SHARED_PREFS = "sharedPrefs";
+        public static string KEY_HIGHSCORE = "keyHighscore";
         Button startButton;
+        Button infoButton;
+        Button testButton;
+        int highscore;
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
         LinearLayout linearLayout;
+        TextView textHighscore;
         SeekBar seekBar;
         EditText editTextFb;
         TextView textView;
@@ -33,6 +40,7 @@ namespace VisualDA
         int counter2 = 0;
         int step;
         int num;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -47,13 +55,44 @@ namespace VisualDA
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
+            infoButton = FindViewById<Button>(Resource.Id.buttonInfo);
+            textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
+            testButton = FindViewById<Button>(Resource.Id.buttonTest);
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             StartVisualizing();
+            testButton.Click += delegate {
+                Intent intent = new Intent(this, typeof(TestKnapsackActivity));
+                StartActivityForResult(intent, REQUEST_CODE_TEST);
+            };
+            infoButton.Click += delegate {
+                GoToInfoActivity();
+            };
         }
 
         private void seekBarProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
             speedOfAlgo.Text = ((e.Progress / 1000.0)).ToString() + " секунда";
+        }
+        private void GoToInfoActivity()
+        {
+            Intent intent = new Intent(this, typeof(InfoKnapsackActivity));
+            StartActivity(intent);
+        }
+        private void LoadHighscore()
+        {
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
+            textHighscore.Text = "Highscore: " + highscore;
+        }
+
+        private void UpdateHighscore(int highscoreNew)
+        {
+            highscore = highscoreNew;
+            textHighscore.Text = "Highscore: " + highscore;
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            ISharedPreferencesEditor editor = prefs.Edit();
+            editor.PutInt(KEY_HIGHSCORE, highscore);
+            editor.Apply();
         }
 
         private void StartVisualizing()

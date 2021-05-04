@@ -78,6 +78,9 @@
     <Compile Include="InfoKnapsackActivity.cs" />
     <Compile Include="TestLCSActivity.cs" />
     <Compile Include="TestLCSDBHelper.cs" />
+    <Compile Include="TestFibonacciActivity.cs" />
+    <Compile Include="InfoFibonacciActivity.cs" />
+    <Compile Include="TestFibonacciDBHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -268,6 +271,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\lcstespic3.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\test_fibonacci_activity.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\info_fibonacci_activity.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
