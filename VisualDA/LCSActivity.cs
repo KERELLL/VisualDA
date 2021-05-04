@@ -18,6 +18,7 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class LCSActivity : Activity
     {
+
         Button button;
         Button randomBtn;
         Button infoBtn;

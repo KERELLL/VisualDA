@@ -28,6 +28,8 @@ namespace VisualDA
 
             TextView textViewSub = convertView.FindViewById<TextView>(Resource.Id.textSub);
 
+            TextView textViewHighscore = convertView.FindViewById<TextView>(Resource.Id.textHighscore);
+
             imageView.SetImageResource(GetItem(position).Image);
 
             textView.Text = GetItem(position).Name;

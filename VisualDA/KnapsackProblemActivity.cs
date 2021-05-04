@@ -26,6 +26,7 @@ namespace VisualDA
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
         Button testButton;
+        Button infoButton;
         LinearLayout linearLayout;
         SeekBar seekBar;
         TextView speedOfAlgo;
@@ -56,6 +57,7 @@ namespace VisualDA
             buttonStart = FindViewById<ImageButton>(Resource.Id.buttonStart);
             buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
             buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
+            infoButton = FindViewById<Button>(Resource.Id.buttonInfo);
             testButton = FindViewById<Button>(Resource.Id.buttonTest);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
@@ -67,7 +69,6 @@ namespace VisualDA
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
             LoadHighscore();
-            
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
             action.SetTypeface(tf, TypefaceStyle.Normal);
@@ -127,6 +128,9 @@ namespace VisualDA
                 Intent intent = new Intent(this, typeof(TestKnapsackActivity));
                 StartActivityForResult(intent, REQUEST_CODE_TEST);
             };
+            infoButton.Click += delegate {
+                GoToInfoActivity();
+            };
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -143,13 +147,18 @@ namespace VisualDA
                 }
             }
         }
-
+        private void GoToInfoActivity()
+        {
+            Intent intent = new Intent(this, typeof(InfoKnapsackActivity));
+            StartActivity(intent);
+        }
         private void LoadHighscore()
         {
             ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
             highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
             textHighscore.Text = "Highscore: " + highscore;
         }
+
         private void UpdateHighscore(int highscoreNew)
         {
             highscore = highscoreNew;
@@ -397,6 +406,11 @@ namespace VisualDA
             {
                 await Task.Delay(100);
             }
+        }
+
+        private void GetHighscore()
+        {
+
         }
     }
 }

@@ -9,9 +9,9 @@ namespace VisualDA
 
         public Algorithm(int image, string name, string subTitle)
         {
-            this.image = image;
-            this.name = name;
-            this.subTitle = subTitle;
+            Image = image;
+            Name = name;
+            SubTitle = subTitle;
         }
 
         public int Image

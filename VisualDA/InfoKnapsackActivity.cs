@@ -14,13 +14,13 @@ using Android.Widget;
 
 namespace VisualDA
 {
-    [Activity(Label = "InfoActivity")]
-    public class InfoActivity : Activity
+    [Activity(Label = "InfoKnapsackActivity")]
+    public class InfoKnapsackActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.activity_info);
+            SetContentView(Resource.Layout.info_knapsack_activity);
             TextView taskDescription = FindViewById<TextView>(Resource.Id.taskDescription);
             TextView codeView1 = FindViewById<TextView>(Resource.Id.codeView1);
             TextView codeView2 = FindViewById<TextView>(Resource.Id.codeView2);

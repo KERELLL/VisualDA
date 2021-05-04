@@ -19,6 +19,7 @@ namespace VisualDA
     {
         ListView listView;
         List<Algorithm> algorithms;
+        string highscore;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -26,7 +27,7 @@ namespace VisualDA
             SetContentView(Resource.Layout.activity_algorithms);
             listView = FindViewById<ListView>(Resource.Id.listView);
             //Create data
-
+    
             algorithms = new List<Algorithm>();
             algorithms.Add(new Algorithm(Resource.Drawable.fibonaccisequence, "Последовательность Фибоначчи", "Easy"));
             algorithms.Add(new Algorithm(Resource.Drawable.backpack, "Задача о рюкзаке", "Medium"));
@@ -55,10 +56,8 @@ namespace VisualDA
                     StartActivity(intent);
                 }
             };
-    
 
         }
-
 
     }
 }

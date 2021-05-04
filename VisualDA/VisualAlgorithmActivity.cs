@@ -15,9 +15,13 @@ namespace VisualDA
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class VisualAlgorithmActivity : Activity
     {
+        private static int REQUEST_CODE_TEST = 1;
+        public static string SHARED_PREFS = "sharedPrefs";
+        public static string KEY_HIGHSCORE = "keyHighscore";
         ImageButton buttonStart;
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
+        Button testButton;
         TextView line;
         TextView lcs;
         TextView column;
@@ -32,7 +36,9 @@ namespace VisualDA
         TextView textViewLCSE;
         TextView textViewLCSNE;
         TableLayout tableLayout;
+        TextView textHighscore;
         LinearLayout linearLayout;
+        int highscore;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -55,6 +61,8 @@ namespace VisualDA
             textViewLCSE = FindViewById<TextView>(Resource.Id.textViewLCSE);
             textViewLCSNE = FindViewById<TextView>(Resource.Id.textViewLCSNE);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
+            testButton = FindViewById<Button>(Resource.Id.buttonTest);
+            textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
             Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
             action.SetTypeface(tf, TypefaceStyle.Normal);
 
@@ -123,13 +131,46 @@ namespace VisualDA
                     prevTokenSource = cts;
                 }
             };
-        }
+            testButton.Click += delegate {
+                Intent intent = new Intent(this, typeof(TestLCSActivity));
+                StartActivityForResult(intent, REQUEST_CODE_TEST);
+            };
+        } 
 
         private void seekBarProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
             speedOfAlgo.Text = ((e.Progress/1000.0)).ToString() + " секунда";
         }
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (requestCode == REQUEST_CODE_TEST)
+            {
+                if (resultCode == Result.Ok)
+                {
+                    int score = data.GetIntExtra(TestKnapsackActivity.EXTRA_SCORE, 0);
+                    if (score > highscore)
+                    {
+                        UpdateHighscore(score);
+                    }
+                }
+            }
+        }
+        private void LoadHighscore()
+        {
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
+            textHighscore.Text = "Highscore: " + highscore;
+        }
 
+        private void UpdateHighscore(int highscoreNew)
+        {
+            highscore = highscoreNew;
+            textHighscore.Text = "Highscore: " + highscore;
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            ISharedPreferencesEditor editor = prefs.Edit();
+            editor.PutInt(KEY_HIGHSCORE, highscore);
+            editor.Apply();
+        }
         /// <summary>
         /// Метод, который визуализирует алгоритм
         /// Подсвечивание чисел, заполнение таблицы
@@ -269,7 +310,6 @@ namespace VisualDA
                                 return;
                             }
                         }
-
                     }
                     if (stop)
                     {
@@ -461,7 +501,18 @@ namespace VisualDA
                     TextView cell2 = (TextView)row.GetChildAt(j);
 
                     action.Text = $"Ячейка верхня больше ячейки нижней, идем вверх";
-
+                    cell.SetBackgroundResource(Resource.Drawable.cubRed);
+                    step++;
+                    count.Text = step.ToString();
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
                     count.Text = step.ToString();
@@ -488,18 +539,7 @@ namespace VisualDA
                         }
                     }
 
-                    cell.SetBackgroundResource(Resource.Drawable.cubRed);
-                    step++;
-                    count.Text = step.ToString();
-                    if (step >= stepToGo)
-                    {
-                        await Pause();
-                        await Task.Delay((int)valueOfSeekBar);
-                        if (token.IsCancellationRequested)
-                        {
-                            return;
-                        }
-                    }
+                 
                     cell2.SetBackgroundResource(Resource.Drawable.cubGrey2);
                     i--;
                 }
@@ -512,6 +552,17 @@ namespace VisualDA
 
                     action.Text = $"Ячейка нижняя больше ячейки верхней, идем влево";
 
+                    cell.SetBackgroundResource(Resource.Drawable.cubRed);
+                    step++;
+                    if (step >= stepToGo)
+                    {
+                        await Pause();
+                        await Task.Delay((int)valueOfSeekBar);
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
                     cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
                     step++;
                     if (step >= stepToGo)
@@ -536,17 +587,6 @@ namespace VisualDA
                         }
                     }
 
-                    cell.SetBackgroundResource(Resource.Drawable.cubRed);
-                    step++;
-                    if (step >= stepToGo)
-                    {
-                        await Pause();
-                        await Task.Delay((int)valueOfSeekBar);
-                        if (token.IsCancellationRequested)
-                        {
-                            return;
-                        }
-                    }
                     cell1.SetBackgroundResource(Resource.Drawable.cubGrey2);
                     j--;
                 }
