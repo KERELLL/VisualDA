@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_name">LCS</string>
+    <string name="app_name">VisualDA</string>
     <string name="action_settings">Settings</string>
     <string name="TryAgain">Текст должен быть от 1 до 10 символов</string>
     <string name="line">line</string>
-    <string name="What_is_LCS">Подпоследовательность - это последовательность, которая может быть получена из другой последовательности путем удаления некоторых элементов без изменения порядка оставшихся элементов. Самая длинная общая подпоследовательность (Longest Common Subsequence) из 2 последовательностей представляет собой подпоследовательность с максимальной длиной, которая является общей для обеих последовательностей.</string>
-    <string name="What_is_KSP"><b>Формулировка задачи:</b>\nДано N предметов, W — вместимость рюкзака, w={w1,w2,…,wN}  — соответствующий ему набор положительных целых весов, p={p1,p2,…,pN} — соответствующий ему набор положительных целых стоимостей. Нужно найти набор бинарных величин B={b1,b2,…,bN}, bi = 1, если предмет включен, иначе bi = 0, и такой что:\n1) b1w1+⋯+bNwN⩽W\n2) b1p1+⋯+bNpN максимальна.\n\n<b>Сложность:</b> O(N * W)</string>
+    <string name="helo">dsdsd</string>
+    <string name="What_is_LCS">Для двух заданных строк X и Y найти все наидлиннейшие общие подпоследовательности Z[1..k] строк X и Y, где k – длина наидлиннейшей общей подпоследовательности</string>
+    <string name="LCS_Hard"><font color ="#1E90FF">O(n1 * n2)</font>, где n1 и n2 - длины X и Y</string>
+    <string name="LCS_Code1">Если <font color ="#1E90FF">Xi = Yj</font> и i > 0, j > 0, то <font color ="#1E90FF">L[i, j] = L[i - 1, j - 1] + 1</font></string>
+    <string name="LCS_Code2">Если <font color ="#1E90FF">Xi != Yj</font> и i > 0, j > 0, то <font color ="#1E90FF">L[i, j] = max(L[i - 1, j], L[i, j - 1])</font></string>
+    <string name="KSP_Code1">Если <font color ="#1E90FF">i = 0 или j = 0</font>, то <font color ="#1E90FF">A[i, j] = 0</font></string>
+    <string name="KSP_Code2">Иначе если <font color ="#1E90FF">j > ВЕСА[i]</font>, то <font color ="#1E90FF">A[i,j] = max(A[i-1,j],A[i-1,j-ВЕСА[i]]+ЦЕНЫ[i])</font></string>
+    <string name="KSP_Code3">Иначе <font color ="#1E90FF">A[i,j] = A[i-1,j]</font></string>
+    <string name="Fib_des">Числа Фибоначчи — бескочечная числовая последовательность Fn, в которой <font color ="#1E90FF">каждое число есть сумма двух предыдущих</font></string>
+    <string name="Fib_met">Первые два элемента последовательности, нужные для затравки —<font color ="#1E90FF">ноль и единица: F0 = 0, F1 = 1</font>\n<font color ="#1E90FF">F[i] = F[i - 2] + F[i - 1]</font></string>
 </resources>

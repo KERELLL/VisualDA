@@ -407,10 +407,5 @@ namespace VisualDA
                 await Task.Delay(100);
             }
         }
-
-        private void GetHighscore()
-        {
-
-        }
     }
 }

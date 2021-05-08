@@ -20,9 +20,9 @@ namespace VisualDA
     public class FibonacciSequenceActivity : Activity
     {
         private static int REQUEST_CODE_TEST = 1;
-        public static string SHARED_PREFS = "sharedPrefs";
-        public static string KEY_HIGHSCORE = "keyHighscore";
-        Button startButton;
+        public static string SHARED_PREFS_FIB = "sharedPrefsFib";
+        public static string KEY_HIGHSCORE_FIB = "keyHighscoreGFib";
+        ImageButton startButton;
         Button infoButton;
         Button testButton;
         int highscore;
@@ -33,8 +33,10 @@ namespace VisualDA
         SeekBar seekBar;
         EditText editTextFb;
         TextView textView;
+        TextView action;
         TextView speedOfAlgo;
         TableLayout tableLayout;
+        TextView count;
         bool pause = true;
         bool stop = false;
         int counter2 = 0;
@@ -47,21 +49,24 @@ namespace VisualDA
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.fibonacci_sequence_activity);
-            startButton = FindViewById<Button>(Resource.Id.buttonStart);
-            //buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
-            //buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
+            startButton = FindViewById<ImageButton>(Resource.Id.buttonStart);
+            buttonPrevStep = FindViewById<ImageButton>(Resource.Id.buttonPrevStep);
+            buttonNextStep = FindViewById<ImageButton>(Resource.Id.buttonNextStep);
             editTextFb = FindViewById<EditText>(Resource.Id.editText1);
             textView = FindViewById<TextView>(Resource.Id.textView2);
+            count = FindViewById<TextView>(Resource.Id.count);
             seekBar = FindViewById<SeekBar>(Resource.Id.seekBar1);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             speedOfAlgo = FindViewById<TextView>(Resource.Id.speedOfAlgo);
             infoButton = FindViewById<Button>(Resource.Id.buttonInfo);
-            textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
+            textHighscore = FindViewById<TextView>(Resource.Id.textHighscoreFib);
             testButton = FindViewById<Button>(Resource.Id.buttonTest);
+            action = FindViewById<TextView>(Resource.Id.action);
+            LoadHighscore();
             seekBar.ProgressChanged += new EventHandler<SeekBar.ProgressChangedEventArgs>(seekBarProgressChanged);
             StartVisualizing();
             testButton.Click += delegate {
-                Intent intent = new Intent(this, typeof(TestKnapsackActivity));
+                Intent intent = new Intent(this, typeof(TestFibonacciActivity));
                 StartActivityForResult(intent, REQUEST_CODE_TEST);
             };
             infoButton.Click += delegate {
@@ -73,15 +78,29 @@ namespace VisualDA
         {
             speedOfAlgo.Text = ((e.Progress / 1000.0)).ToString() + " секунда";
         }
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (requestCode == REQUEST_CODE_TEST)
+            {
+                if (resultCode == Result.Ok)
+                {
+                    int score = data.GetIntExtra(TestFibonacciActivity.EXTRA_SCORE_FIB, 0); ;
+                    if (score > highscore)
+                    {
+                        UpdateHighscore(score);
+                    }
+                }
+            }
+        }
         private void GoToInfoActivity()
         {
-            Intent intent = new Intent(this, typeof(InfoKnapsackActivity));
+            Intent intent = new Intent(this, typeof(InfoFibonacciActivity));
             StartActivity(intent);
         }
         private void LoadHighscore()
         {
-            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
-            highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS_FIB, FileCreationMode.Private);
+            highscore = prefs.GetInt(KEY_HIGHSCORE_FIB, 0);
             textHighscore.Text = "Highscore: " + highscore;
         }
 
@@ -89,9 +108,9 @@ namespace VisualDA
         {
             highscore = highscoreNew;
             textHighscore.Text = "Highscore: " + highscore;
-            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS_FIB, FileCreationMode.Private);
             ISharedPreferencesEditor editor = prefs.Edit();
-            editor.PutInt(KEY_HIGHSCORE, highscore);
+            editor.PutInt(KEY_HIGHSCORE_FIB, highscore);
             editor.Apply();
         }
 
@@ -112,7 +131,7 @@ namespace VisualDA
                 else
                 {
                     num = int.Parse(editTextFb.Text);
-                    if (num < 1 || num > 11)
+                    if (num < 1 || num > 10)
                     {
                         Toast.MakeText(this, "Ваше число не входит в [1, 10]", ToastLength.Long).Show();
                     }
@@ -121,12 +140,12 @@ namespace VisualDA
                         counter2++;
                         if (pause == true)
                         {
-                            startButton.Text = "Стоп";
+                            startButton.SetBackgroundResource(Resource.Drawable.pause);
                             pause = false;
                         }
                         else
                         {
-                            startButton.Text = "Продолжить";
+                            startButton.SetBackgroundResource(Resource.Drawable.play);
                             pause = true;
                         }
                         editTextFb.Focusable = false;
@@ -140,6 +159,31 @@ namespace VisualDA
                             DoAlgorithm(tableLayout, cts.Token);
                         }
                     }
+                }
+            };
+            buttonPrevStep.Click += delegate {
+                if (pause && counter2 > 0)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgorithm(CreateTable(), cts.Token, currentStep - 1);
+                    prevTokenSource = cts;
+                }
+            };
+
+            buttonNextStep.Click += delegate {
+                if (pause && counter2 > 0)
+                {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    prevTokenSource.Cancel();
+                    linearLayout.RemoveAllViews();
+                    int currentStep = step;
+                    step = 0;
+                    DoAlgorithm(CreateTable(), cts.Token, currentStep + 1);
+                    prevTokenSource = cts;
                 }
             };
         }
@@ -187,7 +231,9 @@ namespace VisualDA
                 TextView cell1 = (TextView)row.GetChildAt(i - 1);
                 TextView cell2 = (TextView)row.GetChildAt(i - 2);
                 sequence[i] = sequence[i - 2] + sequence[i - 1];
+                action.Text = $"F[i] = F[i - 2] + F[i - 1]\nF[{i}] = F[{i - 2}] + F[{i - 1}] = {sequence[i]}";
                 step++;
+                count.Text = step.ToString();
                 cell1.SetBackgroundResource(Resource.Drawable.cubBlue);
                 cell2.SetBackgroundResource(Resource.Drawable.cubBlue);
                 if (step >= stepToGo)
@@ -200,6 +246,7 @@ namespace VisualDA
                     }
                 }
                 step++;
+                count.Text = step.ToString();
                 cell.SetBackgroundResource(Resource.Drawable.cubRed);
                 if (step >= stepToGo)
                 {
@@ -213,8 +260,8 @@ namespace VisualDA
                 cell.Text = sequence[i].ToString();
             }
             ResetTableColor(tableLayout);
-            startButton.Enabled = false;
-            startButton.Text = "Алгоритм закончен";
+            pause = true;
+            startButton.SetBackgroundResource(Resource.Drawable.play);
         }
         private async Task Pause()
         {

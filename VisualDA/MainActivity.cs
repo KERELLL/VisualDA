@@ -39,10 +39,7 @@ namespace VisualDA
                 StartActivity(intent);
                 
             };
-            infoBtn.Click += delegate {
-                Intent intent = new Intent(this, typeof(InfoActivity));
-                StartActivity(intent);
-            };
+
         }
     }
 }

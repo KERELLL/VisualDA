@@ -20,9 +20,19 @@
 			android:layout_marginBottom="10.0dp"
 			android:layout_marginTop="31.0dp"/>
 		<TextView
-			android:text="Формулировка задачи:\nДля двух заданных строк X и Y найти все наидлиннейшие общие подпоследовательности Z[1..k] строк X и Y, где k – длина наидлиннейшей общей подпоследовательности.\nСложность алгоритма:O(n1 * n2), где n1 и n2 -  длины X и Y"
-			android:textColor="#000000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Формулировка задачи"/>
+		<TextView
+			android:text="@string/What_is_LCS"
+			android:textColor="#000000"
+			android:gravity="left" 
 			android:textSize="16dp"
 			android:layout_width="wrap_content"
 			android:id="@+id/taskDescription"
@@ -30,23 +40,54 @@
 			android:layout_marginLeft="10.0dp"
 			android:layout_marginRight="16.0dp" />
 		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Сложность алгоритма"/>
+		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="@string/LCS_Hard"/>
+		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Метод решения задачи"/>
+		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textColor="#000000"
 			android:id="@+id/taskMethod"
-			android:gravity="left"
+			android:layout_gravity="left"
 			android:textSize="16dp"
 			android:layout_marginLeft="10.0dp"
-			android:text="Метод решения задачи:\n- Номер строки - номера элементов первой строки\n- Номер столбца - элементов второй строки"
+			android:text="- Номер строки - номера элементов первой строки\n- Номер столбца - номера элементов второй строки"
 			android:layout_marginRight="7.5dp" />
 	<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:textColor="#000"
-		android:textSize="17dp"
+		android:textSize="15dp"
 		android:id="@+id/codeView1"
-		android:gravity="center"
-		android:text="Если Xi = Yj и i > 0, j > 0, то L[i, j] = L[i - 1, j - 1] + 1"/>
+		android:layout_marginRight="16.0dp"
+		android:layout_gravity="left"
+		android:layout_marginLeft="10.0dp"
+		android:text="@string/LCS_Code1"/>
 		<ImageView
 			android:layout_width="240dp"
 			android:layout_height="74dp"
@@ -56,10 +97,12 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000"
-			android:gravity="center"
+			android:layout_gravity="left"
 			android:textSize="15dp"
+			android:layout_marginRight="16.0dp"
 			android:id="@+id/codeView2"
-			android:text="Если Xi != Yj и i > 0, j > 0, то L[i, j] = max(L[i - 1, j], L[i, j - 1])"
+			android:layout_marginLeft="10.0dp"
+			android:text="@string/LCS_Code2"
 			android:layout_marginTop="5.5dp" />
 		<ImageView
 			android:layout_width="240dp"
@@ -70,13 +113,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000"
-			android:gravity="center"
+			android:layout_gravity="left"
 			android:textSize="15dp"
 			android:id="@+id/codeView3"
+			
 			android:text="После заполнения матрицы, соединив эти ячейки, мы получим искомый LCS. Соединять при этом нужно двигаясь от максимальных индексов к минимальным, если ячейка подсвечена, то добавляем соответствующий элемент к LCS, если нет, то двигаемся вверх или влево в зависимости от того где находится большее значение в матрице"
 			android:layout_marginTop="5.5dp"
-			android:layout_marginRight="10.0dp"
 			android:layout_marginLeft="10.0dp"
+			android:layout_marginRight="16.0dp"
 			android:layout_marginBottom="10.0dp" />
 
 </LinearLayout>

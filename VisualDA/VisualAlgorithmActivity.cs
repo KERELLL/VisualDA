@@ -16,8 +16,8 @@ namespace VisualDA
     public class VisualAlgorithmActivity : Activity
     {
         private static int REQUEST_CODE_TEST = 1;
-        public static string SHARED_PREFS = "sharedPrefs";
-        public static string KEY_HIGHSCORE = "keyHighscore";
+        public static string SHARED_PREFS_LCS = "sharedPrefsLCS";
+        public static string KEY_HIGHSCORE_LCS = "keyHighscoreLCS";
         ImageButton buttonStart;
         ImageButton buttonPrevStep;
         ImageButton buttonNextStep;
@@ -62,7 +62,7 @@ namespace VisualDA
             textViewLCSNE = FindViewById<TextView>(Resource.Id.textViewLCSNE);
             linearLayout = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             testButton = FindViewById<Button>(Resource.Id.buttonTest);
-            textHighscore = FindViewById<TextView>(Resource.Id.textHighscore);
+            textHighscore = FindViewById<TextView>(Resource.Id.textHighscoreLCS);
             LoadHighscore();
             Typeface tf = Typeface.CreateFromAsset(Assets, "OpenSans-Regular.ttf");
             action.SetTypeface(tf, TypefaceStyle.Normal);
@@ -148,7 +148,7 @@ namespace VisualDA
             {
                 if (resultCode == Result.Ok)
                 {
-                    int score = data.GetIntExtra(TestKnapsackActivity.EXTRA_SCORE, 0);
+                    int score = data.GetIntExtra(TestLCSActivity.EXTRA_SCORE_LCS, 0);
                     if (score > highscore)
                     {
                         UpdateHighscore(score);
@@ -158,8 +158,8 @@ namespace VisualDA
         }
         private void LoadHighscore()
         {
-            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
-            highscore = prefs.GetInt(KEY_HIGHSCORE, 0);
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS_LCS, FileCreationMode.Private);
+            highscore = prefs.GetInt(KEY_HIGHSCORE_LCS, 0);
             textHighscore.Text = "Highscore: " + highscore;
         }
 
@@ -167,9 +167,9 @@ namespace VisualDA
         {
             highscore = highscoreNew;
             textHighscore.Text = "Highscore: " + highscore;
-            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS, FileCreationMode.Private);
+            ISharedPreferences prefs = GetSharedPreferences(SHARED_PREFS_LCS, FileCreationMode.Private);
             ISharedPreferencesEditor editor = prefs.Edit();
-            editor.PutInt(KEY_HIGHSCORE, highscore);
+            editor.PutInt(KEY_HIGHSCORE_LCS, highscore);
             editor.Apply();
         }
         /// <summary>
@@ -191,6 +191,9 @@ namespace VisualDA
             {
                 subsequence[i] = new int[lineLen + 1];
             }
+            textViewLCS.Text = "Если i = 0 или j = 0, то L[i, j] = 0";
+            textViewLCSE.Text = "Если Xi = Yj и i > 0, j > 0, то L[i, j] = L[i - 1, j - 1] + 1";
+            textViewLCSNE.Text = "Если Xi != Yj и i > 0, j > 0, то L[i, j] = max(L[i - 1, j], L[i, j - 1])";
             for (int i = 0; i < columnLen + 1; i++)
             {
                 TableRow row = (TableRow)tableLayout.GetChildAt(i + 1);
@@ -467,20 +470,26 @@ namespace VisualDA
             string finalSubsequence = "";
             int i = columnText.Length;
             int j = lineText.Length;
-
+            textViewLCS.Text = "Если X[i-1] = Y[j-1], то LCS = X[i-1] + LCS, i--, j--";
+            textViewLCSE.Text = "Иначе если L[i - 1][j] > L[i][j - 1], то i--";
+            textViewLCSNE.Text = "Иначе j--";
             while (i >= 1 && j >= 1)
             {
+                textViewLCS.SetTextColor(Android.Graphics.Color.Black);
+                textViewLCSE.SetTextColor(Android.Graphics.Color.Black);
+                textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
                 TableRow row = (TableRow)tableLayout.GetChildAt(i+1);
                 double valueOfSeekBar = seekBar.Progress;
                 if (columnText[i - 1] == lineText[j - 1])
                 {
                     TextView cell = (TextView)row.GetChildAt(j + 1);
-
+                    textViewLCS.SetTextColor(Android.Graphics.Color.Red);
                     finalSubsequence = columnText[i - 1] + finalSubsequence;
 
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
                     count.Text = step.ToString();
+                    
                     action.Text = $"Совпадение символа {column.Text[i - 1]}, поэтому идем по диагонале";
                     if (step >= stepToGo)
                     {
@@ -500,7 +509,7 @@ namespace VisualDA
                     TextView cell = (TextView)row.GetChildAt(j + 1);
                     TextView cell1 = (TextView)row2.GetChildAt(j + 1);
                     TextView cell2 = (TextView)row.GetChildAt(j);
-
+                    textViewLCSE.SetTextColor(Android.Graphics.Color.Red);
                     action.Text = $"Ячейка верхня больше ячейки нижней, идем вверх";
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
@@ -552,7 +561,7 @@ namespace VisualDA
                     TextView cell2 = (TextView)row.GetChildAt(j);
 
                     action.Text = $"Ячейка нижняя больше ячейки верхней, идем влево";
-
+                    textViewLCSNE.SetTextColor(Android.Graphics.Color.Red);
                     cell.SetBackgroundResource(Resource.Drawable.cubRed);
                     step++;
                     if (step >= stepToGo)
@@ -594,14 +603,14 @@ namespace VisualDA
                 if (stop)
                     return;
             }
+            textViewLCS.SetTextColor(Android.Graphics.Color.Black);
+            textViewLCSE.SetTextColor(Android.Graphics.Color.Black);
+            textViewLCSNE.SetTextColor(Android.Graphics.Color.Black);
             TextView lcs = FindViewById<TextView>(Resource.Id.lcs);
             lcs.Text = finalSubsequence + " длина: " + finalSubsequence.Length.ToString();
             action.Text = "Алгоритм закончен";
-
-            buttonStart.Click+=delegate {
-                Intent intent = new Intent(this, typeof(LCSActivity));
-                StartActivity(intent);
-            };
+            pause = true;
+            buttonStart.SetBackgroundResource(Resource.Drawable.play);
         }
     }
 }

@@ -20,7 +20,17 @@
 			android:layout_marginBottom="10.0dp"
 			android:layout_marginTop="31.0dp"/>
 		<TextView
-			android:text="Формулировка задачи:\nИмеются наборы\n- Объектов o1, o2, ... oN\n- Весов(объемов) объектов w1, w2, ... wN\n- Стоимостей объектов s1, s2, ... sN\nНеобходимо упаковать рюкзак весом (объемом) W так, чтобы его стоимость S была максимальной.\nСложность: O(N * W)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Формулировка задачи"/>
+		<TextView
+			android:text="Имеются наборы\n- Объектов o1, o2, ... oN\n- Весов(объемов) объектов w1, w2, ... wN\n- Стоимостей объектов s1, s2, ... sN\nНеобходимо упаковать рюкзак весом (объемом) W так, чтобы его стоимость S была максимальной."
 			android:textColor="#000000"
 			android:gravity="left"
 			android:textSize="16dp"
@@ -30,6 +40,35 @@
 			android:layout_marginLeft="10.0dp"
 			android:layout_marginRight="16.0dp" />
 		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Сложность"/>
+		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#1E90FF"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="O(N * W)"/>
+			<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:gravity="left"
+			android:textSize="17dp"
+			android:textColor="#000000"
+			android:textStyle="bold"
+			android:layout_marginRight="16.0dp"
+			android:layout_marginLeft="10.0dp"
+			android:text="Метод решения задачи"/>
+		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textColor="#000000"
@@ -37,7 +76,7 @@
 			android:gravity="left"
 			android:textSize="16dp"
 			android:layout_marginLeft="10.0dp"
-			android:text="Метод решения задачи:\n- Номер строки - номера предмета\n- Номер столбца - вес рюкзака\n- Ячейка таблицы [i, j] - максимальная стоимость набора предметов из o1...oi для рюкзака весом j"
+			android:text="- Номер строки - номера предмета\n- Номер столбца - вес рюкзака\n- Ячейка таблицы [i, j] - максимальная стоимость набора предметов из o1...oi для рюкзака весом j"
 			android:layout_marginRight="7.5dp" />
 		<TextView
 			android:layout_width="wrap_content"
@@ -45,8 +84,10 @@
 			android:textColor="#000"
 			android:textSize="17dp"
 			android:id="@+id/codeView1"
-			android:gravity="center"
-			android:text="Если i = 0 или j = 0, то A[i, j] = 0"/>
+			android:layout_gravity="left"
+			android:layout_marginLeft="10.0dp"
+			android:textStyle="bold"
+			android:text="@string/KSP_Code1"/>
 		<ImageView
 			android:layout_width="240dp"
 			android:layout_height="75dp"
@@ -56,10 +97,12 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000"
-			android:gravity="center"
+			android:layout_gravity="left"
 			android:textSize="15dp"
 			android:id="@+id/codeView2"
-			android:text="Иначе если j > ВЕСА[i] то A[i,j] = max(A[i-1,j],A[i-1,j-ВЕСА[i]]+ЦЕНЫ[i])"
+			android:layout_marginLeft="10.0dp"
+			android:textStyle="bold"
+			android:text="@string/KSP_Code2"
 			android:layout_marginTop="5.5dp" />
 		<ImageView
 			android:layout_width="240dp"
@@ -70,10 +113,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="#000"
-		android:gravity="center"
+		android:layout_gravity="left"
+		android:textStyle="bold"
 		android:textSize="15dp"
-		android:id="@+id/codeView3"
-		android:text="Иначе A[i,j] = A[i-1,j]"
+		android:layout_marginLeft="10.0dp"
+		android:id="@+id/codeView3"	
+		android:text="@string/KSP_Code2"
 		android:layout_marginTop="5.5dp" />
 		<ImageView
 			android:layout_width="240dp"

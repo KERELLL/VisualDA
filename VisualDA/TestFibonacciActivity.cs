@@ -18,10 +18,10 @@ using AndroidX.Core.Content;
 
 namespace VisualDA
 {
-    [Activity(Label = "TestKnapsackActivity")]
+    [Activity(Label = "TestFibonacciActivity")]
     public class TestFibonacciActivity : Activity
     {
-        public static string EXTRA_SCORE = "extraScore";
+        public static string EXTRA_SCORE_FIB = "extraScoreFib";
 
         LinearLayout linearLayout;
         ImageView imageView;
@@ -62,7 +62,7 @@ namespace VisualDA
             textViewQuestionImage.SetTypeface(tf, TypefaceStyle.Normal);
             textColorDefaultRb = radioButton1.TextColors;
 
-            TestLCSDBHelper testDBHelper = new TestLCSDBHelper(this);
+            TestFibonacciDBHelper testDBHelper = new TestFibonacciDBHelper(this);
             questionList = testDBHelper.GetAllQuestions();
 
             questionCountTotal = questionList.Count;
@@ -157,7 +157,7 @@ namespace VisualDA
         private void FinishQuiz()
         {
             Intent resultIntent = new Intent();
-            resultIntent.PutExtra(EXTRA_SCORE, score);
+            resultIntent.PutExtra(EXTRA_SCORE_FIB, score);
             SetResult(Result.Ok, resultIntent);
             Finish();
 

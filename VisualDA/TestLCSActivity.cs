@@ -18,10 +18,10 @@ using AndroidX.Core.Content;
 
 namespace VisualDA
 {
-    [Activity(Label = "TestKnapsackActivity")]
+    [Activity(Label = "TestLCSActivity")]
     public class TestLCSActivity : Activity
     {
-        public static string EXTRA_SCORE = "extraScore";
+        public static string EXTRA_SCORE_LCS = "extraScoreLCS";
 
         LinearLayout linearLayout;
         ImageView imageView;
@@ -62,8 +62,8 @@ namespace VisualDA
             textViewQuestionImage.SetTypeface(tf, TypefaceStyle.Normal);
             textColorDefaultRb = radioButton1.TextColors;
 
-            TestLCSDBHelper testDBHelper = new TestLCSDBHelper(this);
-            questionList = testDBHelper.GetAllQuestions();
+            TestLCSDBHelper testLCSDBHelper = new TestLCSDBHelper(this);
+            questionList = testLCSDBHelper.GetAllQuestions();
 
             questionCountTotal = questionList.Count;
 
@@ -157,7 +157,7 @@ namespace VisualDA
         private void FinishQuiz()
         {
             Intent resultIntent = new Intent();
-            resultIntent.PutExtra(EXTRA_SCORE, score);
+            resultIntent.PutExtra(EXTRA_SCORE_LCS, score);
             SetResult(Result.Ok, resultIntent);
             Finish();
 

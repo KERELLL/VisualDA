@@ -41,14 +41,10 @@ namespace VisualDA
 
         private void FillQuestionTable()
         {
-            Question question1 = new Question(Resource.Drawable.LCSpicTest1, "Какое число должно стоять в синей ячейке?", "1", "2", "3", 2);
+            Question question1 = new Question(Resource.Drawable.fibPic1, "Какое число должно стоять в красной ячейке?", "18", "21", "23", 2);
             AddQuestion(question1);
-            Question question2 = new Question(Resource.Drawable.lcstestpic2, "Какое число должно стоять в синей ячейке?", "1", "2", "3", 2);
+            Question question2 = new Question(Resource.Drawable.fibPic2, "Какое число должно стоять в красной ячейке?", "79", "83", "89", 3);
             AddQuestion(question2);
-            Question question3 = new Question(Resource.Drawable.lcstespic3, "Куда пойдет алгоритм?", "влево",
-                "вверх",
-                "диагональ", 1); ;
-            AddQuestion(question3);
         }
 
         private void AddQuestion(Question question)
